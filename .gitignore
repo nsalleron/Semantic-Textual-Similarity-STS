@@ -1,1 +1,12 @@
-*.docs
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+artifacts/
+!artifacts/.gitkeep
+*.egg-info/
+.DS_Store
+
+# Office documents (never tracked)
+*.docx
+~$*.docx
