@@ -1,0 +1,23 @@
+services:
+  api:
+    build: .
+    image: semantic-similarity-api:latest
+    ports:
+      - "8000:8000"
+    environment:
+      # Load only a subset to speed up first boot; remove to load all 5 models.
+      # SSA_MODEL_IDS: "tfidf,all-MiniLM-L6-v2"
+      HF_HOME: /models_cache
+    volumes:
+      # Persist downloaded HF models and locally built artifacts across restarts.
+      - hf_cache:/models_cache
+      - ./artifacts:/app/artifacts
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request,sys; sys.exit(0) if urllib.request.urlopen('http://localhost:8000/health').status==200 else sys.exit(1)"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 40s
+
+volumes:
+  hf_cache:
